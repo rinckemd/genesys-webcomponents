@@ -1,0 +1,8 @@
+#!/var/build/workspace/970171aa-717a-4ea8-a77c-d665139bfa0b/build_venv/bin/python3.8
+# -*- coding: utf-8 -*-
+import re
+import sys
+from genesys_unified_config.cli import export
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(export())
