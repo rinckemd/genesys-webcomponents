@@ -1,4 +1,4 @@
-import { Component, Element, JSX, h, Prop } from '@stencil/core';
+import { Component, Element, JSX, h, Prop, Watch } from '@stencil/core';
 import { capitalizeFirstLetter } from '@utils/string/capitalize-first-letter';
 import { trackComponent } from '@utils/tracking/usage';
 import { GuxTableToolbarActionTypes } from './gux-table-toolbar-action.types';
@@ -26,6 +26,13 @@ export class GuxTableToolbarAction {
 
   @Prop()
   iconOnly: boolean = false;
+
+  @Watch('iconOnly')
+  iconOnlyChanged(newIconOnly: boolean) {
+    // Do not wait for the next render to avoid a flash of text when initially rendering condensed.
+    const textWrapperElement = this.root.shadowRoot.querySelector('gux-table-toolbar-custom-action');
+    textWrapperElement.setAttribute('icon-only', String(newIconOnly));
+  }
 
   @Prop()
   disabled: boolean = false;

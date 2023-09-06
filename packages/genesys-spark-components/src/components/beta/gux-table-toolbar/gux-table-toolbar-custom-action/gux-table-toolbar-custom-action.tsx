@@ -1,4 +1,4 @@
-import { Component, Element, JSX, h, Prop } from '@stencil/core';
+import { Component, Element, JSX, h, Prop, Watch } from '@stencil/core';
 import { trackComponent } from '@utils/tracking/usage';
 import { GuxTableToolbarActionAccent } from '../gux-table-toolbar-action-accents.types';
 import { getSlotTextContent } from '@utils/dom/get-slot-text-content';
@@ -18,6 +18,17 @@ export class GuxTableToolbarCustomAction {
 
   @Prop()
   iconOnly: boolean = false;
+
+  @Watch('iconOnly')
+  iconOnlyChanged(newIconOnly: boolean) {
+    // Do not wait for the next render to avoid a flash of text when initially rendering condensed.
+    const textWrapperElement = this.root.shadowRoot.querySelector('.text-wrapper');
+    if (newIconOnly) {
+      textWrapperElement.classList.add('gux-sr-only');
+    } else {
+      textWrapperElement.classList.remove('gux-sr-only');
+    }
+  }
 
   @Prop()
   accent: GuxTableToolbarActionAccent = 'secondary';
@@ -42,7 +53,7 @@ export class GuxTableToolbarCustomAction {
       <gux-button-slot-beta accent={this.accent}>
         <button disabled={this.disabled} type="button" class="gux-action-title">
           <slot name="icon" />
-          <span class={{ 'gux-sr-only': this.iconOnly }}>
+          <span class={{ 'text-wrapper': true, 'gux-sr-only': this.iconOnly }}>
             <slot name="text" />
           </span>
         </button>

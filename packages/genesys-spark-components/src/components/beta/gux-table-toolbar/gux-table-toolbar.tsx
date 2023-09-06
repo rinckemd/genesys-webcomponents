@@ -53,12 +53,10 @@ export class GuxTableToolbar {
    * Record the minimum size for the current layout.
    */
   private recordLayoutMinSize() {
-    readTask(() => {
-      const filterWidth = this.filterSlot?.clientWidth | 0;
-      const controlWidth = this.actionsContainer?.clientWidth | 0;
-      const minSize = filterWidth + controlWidth + MIN_CONTROL_SPACING;
-      this.minimumSizes[this.displayedLayout] = minSize;
-    });
+    const filterWidth = this.filterSlot?.clientWidth | 0;
+    const controlWidth = this.actionsContainer?.clientWidth | 0;
+    const minSize = filterWidth + controlWidth + MIN_CONTROL_SPACING;
+    this.minimumSizes[this.displayedLayout] = minSize;
   }
 
   iconOnlySectionWidth: number;
@@ -214,29 +212,31 @@ export class GuxTableToolbar {
     this.checkResponsiveLayout();
   }
 
-  @OnResize()
   checkResponsiveLayout(): void {
-    readTask(() => {
-      const controlWidth = this.actionsContainer?.clientWidth | 0;
-      const toolbarWidth = this.root.clientWidth;
+    const controlWidth = this.actionsContainer?.clientWidth | 0;
+    const toolbarWidth = this.root.clientWidth;
 
-      if (
-        toolbarWidth <= this.minimumSizes.full &&
-        toolbarWidth >= this.minimumSizes.iconOnly
-      ) {
-        if (this.displayedLayout == 'full') {
-          this.renderIconOnlyLayoutScaleDown(controlWidth);
-        } else if (this.displayedLayout == 'condensed') {
-          this.renderIconOnlyLayoutScaleUp();
-        }
-      } else if (toolbarWidth <= this.minimumSizes.iconOnly) {
-        this.renderCondensedLayout();
-      } else if (this.minimumSizes.iconOnly > this.minimumSizes.full) {
+    if (
+      toolbarWidth <= this.minimumSizes.full &&
+      toolbarWidth >= this.minimumSizes.iconOnly
+    ) {
+      if (this.displayedLayout == 'full') {
+        this.renderIconOnlyLayoutScaleDown(controlWidth);
+      } else if (this.displayedLayout == 'condensed') {
         this.renderIconOnlyLayoutScaleUp();
-      } else {
-        this.renderFullLayout();
       }
-    });
+    } else if (toolbarWidth <= this.minimumSizes.iconOnly) {
+      this.renderCondensedLayout();
+    } else if (this.minimumSizes.iconOnly > this.minimumSizes.full) {
+      this.renderIconOnlyLayoutScaleUp();
+    } else {
+      this.renderFullLayout();
+    }
+  }
+
+  @OnResize()
+  onResize(): void {
+    readTask(() => this.checkResponsiveLayout());
   }
 
   render(): JSX.Element {
