@@ -22,11 +22,14 @@ export class GuxTableToolbarCustomAction {
   @Watch('iconOnly')
   iconOnlyChanged(newIconOnly: boolean) {
     // Do not wait for the next render to avoid a flash of text when initially rendering condensed.
-    const textWrapperElement = this.root.shadowRoot.querySelector('.text-wrapper');
-    if (newIconOnly) {
-      textWrapperElement.classList.add('gux-sr-only');
-    } else {
-      textWrapperElement.classList.remove('gux-sr-only');
+    const textWrapperElement =
+      this.root.shadowRoot.querySelector('.text-wrapper');
+    if (textWrapperElement) {
+      if (newIconOnly) {
+        textWrapperElement.classList.add('gux-sr-only');
+      } else {
+        textWrapperElement.classList.remove('gux-sr-only');
+      }
     }
   }
 

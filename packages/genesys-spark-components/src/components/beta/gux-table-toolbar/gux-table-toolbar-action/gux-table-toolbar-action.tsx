@@ -30,8 +30,12 @@ export class GuxTableToolbarAction {
   @Watch('iconOnly')
   iconOnlyChanged(newIconOnly: boolean) {
     // Do not wait for the next render to avoid a flash of text when initially rendering condensed.
-    const textWrapperElement = this.root.shadowRoot.querySelector('gux-table-toolbar-custom-action');
-    textWrapperElement.setAttribute('icon-only', String(newIconOnly));
+    const textWrapperElement = this.root.shadowRoot.querySelector(
+      'gux-table-toolbar-custom-action'
+    );
+    if (textWrapperElement) {
+      textWrapperElement.setAttribute('icon-only', String(newIconOnly));
+    }
   }
 
   @Prop()
